@@ -70,13 +70,34 @@ class Registry(object):
                 self._index(name, metric)
 
     def add_or_get(self, name, klass):
+        """Creates an instance of `klass`, and registered it with `name`.
+        `klass` may also be an instance of a metric, and will be registered
+        directly.
+
+        If `name` is already registered:
+
+        - If a klass is passed, return the existing instance.
+        - If an instance is passed, replace the existing metric with the new
+          instance.
+        """
         key = safe_key(name)
         with self.lock:
             metric = self.metrics.get(key)
+
             if metric is not None:
-                if not isinstance(metric, klass):
-                    raise RegistryException("{0} is not of "
-                                            "type {1}.".format(name, klass))
+                # If a klass was given, return the existing metric.
+                if inspect.isclass(klass):
+                    if not isinstance(metric, klass):
+                        raise RegistryException("{0} is not of "
+                                                "type {1}.".format(name, klass))
+                    return metric
+
+                # If a metric object was passed, make sure the registry has
+                # the most recent version.
+                else:
+                    self.metrics[key] = klass
+                    self._index(name, klass)
+
             else:
                 if inspect.isclass(klass):
                     metric = klass()
@@ -84,7 +105,7 @@ class Registry(object):
                     metric = klass
                 self.metrics[key] = metric
                 self._index(name, metric)
-            return metric
+                return metric
 
     def _index(self, name, metric):
         if not isinstance(name, dict):
