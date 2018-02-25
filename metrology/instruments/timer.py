@@ -27,8 +27,8 @@ class Timer(object):
                     return _orig_func(*args, **kwargs)
             return _decorator
 
-    def clear(self):
-        self.meter.clear()
+    def clear(self, counter_only=False):
+        self.meter.clear(counter_only=counter_only)
         self.histogram.clear()
 
     def update(self, duration):

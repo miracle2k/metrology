@@ -25,6 +25,9 @@ class Meter(object):
       meter = Metrology.meter('requests')
       meter.mark()
       meter.count
+      meter.one_minute_rate
+
+
 
     """
     def __init__(self, average_class=EWMA):
@@ -66,13 +69,14 @@ class Meter(object):
         """Returns the total number of events that have been recorded."""
         return self.counter.value
 
-    def clear(self):
+    def clear(self, counter_only=False):
         self.counter.value = 0
         self.start_time = time()
 
-        self.m1_rate.clear()
-        self.m5_rate.clear()
-        self.m15_rate.clear()
+        if not counter_only:
+            self.m1_rate.clear()
+            self.m5_rate.clear()
+            self.m15_rate.clear()
 
     @ticker
     def mark(self, value=1):
