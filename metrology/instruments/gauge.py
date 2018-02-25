@@ -14,13 +14,34 @@ class Gauge(object):
           def value(self):
               return len(queue)
 
-      gauge = Metrology.gauge('pending-jobs', JobGauge())
+      gauge = Metrology.gauge('pending-jobs')
+      gauge.set(100)
 
+    You can also subclass the Gauge to make it reactive:
+
+      class JobGauge(metrology.instruments.Gauge):
+          @property
+          def value(self):
+              return len(queue)
+
+      gauge = Metrology.gauge('pending-jobs', JobGauge())
     """
+
+    def __init__(self):
+        self._value = AtomicLong(0)
+
     @property
     def value(self):
-        """"""
-        raise NotImplementedError
+        """Return the current value of the counter."""
+        return self._value.value
+
+    def set(self, value):
+        """Set the gauge to the given value.
+        """
+        self._value.value = value
+
+    def clear(self):
+        self._value.value = 0
 
 
 class RatioGauge(Gauge):

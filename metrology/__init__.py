@@ -19,7 +19,7 @@ class Metrology(object):
         return registry.meter(name)
 
     @classmethod
-    def gauge(cls, name, gauge):
+    def gauge(cls, name, gauge=None):
         return registry.gauge(name, gauge)
 
     @classmethod

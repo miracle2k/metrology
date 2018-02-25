@@ -10,6 +10,7 @@ from metrology.instruments import (
     HistogramUniform,
     Meter,
     Timer,
+    Gauge,
     UtilizationTimer
 )
 
@@ -34,8 +35,8 @@ class Registry(object):
     def meter(self, name):
         return self.add_or_get(name, Meter)
 
-    def gauge(self, name, klass):
-        return self.add_or_get(name, klass)
+    def gauge(self, name, klass=None):
+        return self.add_or_get(name, klass or Gauge)
 
     def timer(self, name):
         return self.add_or_get(name, Timer)
