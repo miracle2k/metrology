@@ -12,13 +12,13 @@ from metrology.instruments.timer import Timer, UtilizationTimer
 
 
 __all__ = (
-    Counter,
-    Derive,
-    Gauge,
-    Histogram,
-    HistogramExponentiallyDecaying,
-    HistogramUniform,
-    Meter,
-    Timer,
-    UtilizationTimer
+    'Counter',
+    'Derive',
+    'Gauge',
+    'Histogram',
+    'HistogramExponentiallyDecaying',
+    'HistogramUniform',
+    'Meter',
+    'Timer',
+    'UtilizationTimer'
 )
